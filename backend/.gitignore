@@ -1,0 +1,6 @@
+# Python venv
+.venv/
+__pycache__/
+# Firebase admin key
+firebase_service_account.json
+.env

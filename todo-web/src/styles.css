@@ -1,0 +1,268 @@
+:root {
+  --bg: #041223;
+  --card: #0b1220;
+  --accent: #7c5cff;
+  --muted: #93a0b3;
+  --glass: rgba(255, 255, 255, 0.05);
+  --success: #2ecc71;
+  --danger: #ff4d4d;
+  --edit: #3498db;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(180deg, #041223, #071b2b);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  color: #e6eef8;
+  min-height: 100vh;
+}
+
+/* ---------------- Header ---------------- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(6px);
+}
+
+.header h1 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.6px;
+}
+
+/* ---------------- Auth ---------------- */
+.app main {
+  padding: 28px;
+  min-height: calc(100vh - 84px);
+}
+
+.auth-card {
+  width: 360px;
+  margin: 40px auto;
+  background: var(--card);
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 6px 30px rgba(12, 20, 40, 0.6);
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.auth-card input,
+.auth-card button,
+.auth-card .google {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+}
+
+.auth-card .google {
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toggle {
+  text-align: center;
+  color: var(--muted);
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* ---------------- Notes ---------------- */
+.notes-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  gap: 12px;
+}
+
+.topbar button {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.topbar button:hover {
+  background: #6b4ce6;
+  transform: scale(1.05);
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.note-card {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.02)
+  );
+  padding: 18px;
+  border-radius: 14px;
+  min-height: 140px;
+  box-shadow: 0 8px 24px rgba(5, 8, 12, 0.6);
+  transition: transform 0.25s, box-shadow 0.25s;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.note-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65);
+}
+
+.note-card.done h3,
+.note-card.done p {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.note-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.note-card p {
+  margin: 0 0 12px 0;
+  color: var(--muted);
+}
+
+/* ---------------- Meta & Actions ---------------- */
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  gap: 8px;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.actions button {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.actions button:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.actions .danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.actions .edit {
+  background: var(--edit);
+  color: #fff;
+}
+
+.actions .complete {
+  background: var(--success);
+  color: #fff;
+}
+
+/* ---------------- Editor ---------------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.editor {
+  width: 540px;
+  background: var(--card);
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.7);
+  animation: slideUp 0.35s ease-in-out;
+}
+
+.editor input,
+.editor textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: var(--glass);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: inherit;
+}
+
+.row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.muted {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 8px 14px;
+  border-radius: 8px;
+}
+
+/* ---------------- Animations ---------------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

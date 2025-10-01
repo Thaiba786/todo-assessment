@@ -1,0 +1,13 @@
+# Ignore secrets
+firebase_service_account.json
+backend-node/.env
+*.jks
+google-services.json
+
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
