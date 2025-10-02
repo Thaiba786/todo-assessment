@@ -6,8 +6,24 @@ const admin = require("./firebase_admin");
 
 dotenv.config();
 const app = express();
-app.use(cors());
+
+// ✅ CORS setup – allow only your frontend
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://to-do-app-bf3c9.web.app",
+      "https://to-do-app-bf3c9.firebaseapp.com"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
+
+// Health route
+app.get("/health", (req, res) => res.json({ status: "✅ Backend running" }));
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
@@ -16,7 +32,7 @@ const MONGO_URI = process.env.MONGO_URI;
 let db;
 MongoClient.connect(MONGO_URI)
   .then((client) => {
-    db = client.db("tododb"); // ✅ use tododb instead of creating new "todo"
+    db = client.db("tododb"); 
     console.log("✅ Connected to MongoDB");
   })
   .catch((err) => console.error("❌ MongoDB connection error:", err));
@@ -38,15 +54,14 @@ async function authenticate(req, res, next) {
 }
 
 // --- CRUD Routes ---
-
-// ✅ GET all notes
+// Get notes
 app.get("/notes", authenticate, async (req, res) => {
   try {
     const userId = req.user.uid;
     const search = req.query.search || "";
 
     const query = {
-      userId: userId,
+      userId,
       $or: [
         { title: { $regex: search, $options: "i" } },
         { content: { $regex: search, $options: "i" } },
@@ -59,21 +74,21 @@ app.get("/notes", authenticate, async (req, res) => {
       .sort({ createdAt: -1 })
       .toArray();
 
-    const formatted = notes.map((n) => ({
-      id: n._id.toString(),
-      title: n.title,
-      content: n.content,
-      completed: n.completed,
-    }));
-
-    res.json(formatted);
+    res.json(
+      notes.map((n) => ({
+        id: n._id.toString(),
+        title: n.title,
+        content: n.content,
+        completed: n.completed,
+      }))
+    );
   } catch (err) {
     console.error(err);
     res.status(500).send("Error fetching notes");
   }
 });
 
-// ✅ Create note
+// Create note
 app.post("/notes", authenticate, async (req, res) => {
   try {
     const note = {
@@ -90,20 +105,16 @@ app.post("/notes", authenticate, async (req, res) => {
   }
 });
 
-// ✅ Update note
+// Update note
 app.put("/notes/:id", authenticate, async (req, res) => {
   try {
     const { id } = req.params;
-    const update = {
-      $set: {
-        title: req.body.title,
-        content: req.body.content,
-        completed: req.body.completed,
-      },
-    };
     const result = await db
       .collection("notes")
-      .updateOne({ _id: new ObjectId(id), userId: req.user.uid }, update);
+      .updateOne(
+        { _id: new ObjectId(id), userId: req.user.uid },
+        { $set: req.body }
+      );
 
     if (result.matchedCount === 0)
       return res.status(404).json({ error: "Note not found" });
@@ -114,7 +125,7 @@ app.put("/notes/:id", authenticate, async (req, res) => {
   }
 });
 
-// ✅ Delete note
+// Delete note
 app.delete("/notes/:id", authenticate, async (req, res) => {
   try {
     const { id } = req.params;
@@ -130,6 +141,7 @@ app.delete("/notes/:id", authenticate, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-app.listen(PORT, '0.0.0.0', () =>
+
+app.listen(PORT, "0.0.0.0", () =>
   console.log(`🚀 Server running on http://0.0.0.0:${PORT}`)
 );
